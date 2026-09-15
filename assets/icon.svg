@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="notekeepYellowGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffcc24" />
+      <stop offset="100%" stop-color="#f5a518" />
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#c97d00" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Fundo Squircle Amarelo / Dourado -->
+  <rect x="2" y="2" width="96" height="96" rx="26" fill="url(#notekeepYellowGrad)" />
+
+  <!-- Folha de Papel com Canto Dobrado -->
+  <g filter="url(#softShadow)">
+    <path d="M 28 20 
+             L 57 20 
+             L 73 36 
+             L 73 72 
+             C 73 76.5 69.5 80 65 80 
+             L 28 80 
+             C 23.5 80 20 76.5 20 72 
+             L 20 28 
+             C 20 23.5 23.5 20 28 20 Z" 
+          fill="#fff9e8" />
+    
+    <!-- Canto Dobrado -->
+    <path d="M 57 20 
+             L 57 32.5 
+             C 57 34.5 58.5 36 60.5 36 
+             L 73 36 Z" 
+          fill="#e59e10" />
+  </g>
+
+  <!-- Três Linhas Horizontais Arredondadas -->
+  <rect x="29" y="44" width="22" height="5" rx="2.5" fill="#f5a518" />
+  <rect x="29" y="54" width="36" height="5" rx="2.5" fill="#f5a518" />
+  <rect x="29" y="64" width="26" height="5" rx="2.5" fill="#f5a518" />
+</svg>

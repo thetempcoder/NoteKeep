@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoteKeep</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <!-- Google Fonts: Roboto, Google Sans e Material Symbols Outlined -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700;800&family=Roboto:wght@300;400;500;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-light">
+
+  <!-- Top App Bar -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <button id="btnMenuToggle" class="icon-btn" title="Menu principal" aria-label="Menu principal">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <div class="logo-container" id="logoApp" title="NoteKeep">
+        <img src="assets/icon.svg" alt="NoteKeep Logo" class="notekeep-logo-img">
+        <span class="app-title">
+          <span class="title-note">Note</span><span class="title-keep">Keep</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Barra de Pesquisa Central -->
+    <div class="search-bar-container">
+      <div class="search-bar" id="searchBar">
+        <button class="icon-btn search-icon" aria-label="Pesquisar">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+        <input type="text" id="searchInput" placeholder="Pesquisar suas notas..." autocomplete="off">
+        <button id="btnClearSearch" class="icon-btn clear-search-btn hidden" title="Limpar pesquisa">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Ações no Topo Direito -->
+    <div class="top-bar-right">
+      <button id="btnRefresh" class="icon-btn" title="Atualizar notas">
+        <span class="material-symbols-outlined">refresh</span>
+      </button>
+      <button id="btnToggleView" class="icon-btn" title="Alternar para exibição em lista">
+        <span class="material-symbols-outlined" id="viewModeIcon">view_agenda</span>
+      </button>
+      <button id="btnToggleTheme" class="icon-btn" title="Alternar tema escuro/claro">
+        <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+      </button>
+
+      <div class="user-avatar" title="Conta de usuário" id="userAvatar">
+        <span class="material-symbols-outlined user-avatar-icon">person</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout Principal -->
+  <div class="main-layout">
+    <!-- Barra Lateral -->
+    <aside class="sidebar" id="sidebar">
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="notes" id="navNotes">
+          <span class="material-symbols-outlined nav-icon">lightbulb</span>
+          <span class="nav-label">Notas</span>
+        </button>
+        <button class="nav-item" data-view="reminders" id="navReminders">
+          <span class="material-symbols-outlined nav-icon">notifications</span>
+          <span class="nav-label">Lembretes</span>
+        </button>
+
+        <div class="nav-divider"></div>
+        <div class="nav-section-title">MARCADORES</div>
+        <div id="sidebarLabelsList"></div>
+
+        <button class="nav-item" id="btnOpenLabelsModal">
+          <span class="material-symbols-outlined nav-icon">edit</span>
+          <span class="nav-label">Editar marcadores</span>
+        </button>
+
+        <div class="nav-divider"></div>
+
+        <button class="nav-item" data-view="archive" id="navArchive">
+          <span class="material-symbols-outlined nav-icon">archive</span>
+          <span class="nav-label">Arquivo</span>
+        </button>
+        <button class="nav-item" data-view="trash" id="navTrash">
+          <span class="material-symbols-outlined nav-icon">delete</span>
+          <span class="nav-label">Lixeira</span>
+        </button>
+
+        <div class="nav-divider"></div>
+
+        <!-- Botão IA na Sidebar -->
+        <button class="nav-item nav-item-ai" data-view="ai" id="navAi">
+          <span class="material-symbols-outlined nav-icon sparkles-sidebar">auto_awesome</span>
+          <span class="nav-label">IA</span>
+          <span class="ai-badge">Novo</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Conteúdo Central -->
+    <main class="content-area" id="contentArea">
+
+      <!-- ================= SEÇÃO DE NOTAS ================= -->
+      <div class="view-section" id="notesView">
+
+        <!-- Banner Informativo da Lixeira -->
+        <div class="trash-banner hidden" id="trashBanner">
+          <span class="trash-banner-text">As notas na Lixeira são excluídas permanentemente pelo usuário.</span>
+          <button id="btnEmptyTrash" class="btn-text-danger">Esvaziar lixeira</button>
+        </div>
+
+        <!-- Banner Informativo do Arquivo -->
+        <div class="archive-banner hidden" id="archiveBanner">
+          <span class="material-symbols-outlined">archive</span>
+          <span>Notas arquivadas. Elas não aparecem no feed principal.</span>
+        </div>
+
+        <!-- Criador de Nota Principal -->
+        <div class="note-creator-wrapper" id="noteCreatorWrapper">
+          <div class="note-creator-card" id="noteCreatorCard">
+            <!-- Estado Recolhido -->
+            <div class="note-creator-collapsed" id="creatorCollapsed">
+              <span class="creator-placeholder">Criar uma nota...</span>
+              <div class="creator-quick-actions">
+                <button class="icon-btn" id="btnQuickChecklist" title="Nova lista com caixas de seleção">
+                  <span class="material-symbols-outlined">check_box</span>
+                </button>
+                <button class="icon-btn" id="btnQuickImage" title="Nova nota com imagem">
+                  <span class="material-symbols-outlined">image</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Estado Expandido -->
+            <div class="note-creator-expanded hidden" id="creatorExpanded">
+              <div class="creator-header">
+                <input type="text" id="newNoteTitle" placeholder="Título" class="creator-title-input">
+                <button id="btnNewNotePin" class="icon-btn pin-btn" title="Fixar nota">
+                  <span class="material-symbols-outlined">push_pin</span>
+                </button>
+              </div>
+
+              <!-- Conteúdo em Texto -->
+              <div id="creatorTextContentArea">
+                <textarea id="newNoteContent" placeholder="Criar uma nota..." rows="3" class="creator-textarea"></textarea>
+              </div>
+
+              <!-- Conteúdo em Checklist -->
+              <div id="creatorChecklistArea" class="creator-checklist-area hidden">
+                <div id="newNoteChecklistItems" class="checklist-items-container"></div>
+                <div class="checklist-add-row">
+                  <span class="material-symbols-outlined add-check-icon">add</span>
+                  <input type="text" id="newChecklistInput" placeholder="Item da lista" class="checklist-input">
+                </div>
+              </div>
+
+              <!-- Tags / Marcadores Selecionados -->
+              <div id="newNoteLabelsList" class="card-labels-container"></div>
+
+              <!-- Barra de Ferramentas Inferior -->
+              <div class="creator-footer">
+                <div class="creator-tools">
+                  <div class="popover-wrapper">
+                    <button class="icon-btn tool-btn" id="btnNewNoteColor" title="Opções de plano de fundo">
+                      <span class="material-symbols-outlined">palette</span>
+                    </button>
+                    <div class="color-palette-popover hidden" id="newNoteColorPalette"></div>
+                  </div>
+
+                  <div class="popover-wrapper">
+                    <button class="icon-btn tool-btn" id="btnNewNoteLabel" title="Adicionar marcador">
+                      <span class="material-symbols-outlined">label</span>
+                    </button>
+                    <div class="label-picker-popover hidden" id="newNoteLabelPicker"></div>
+                  </div>
+
+                  <button class="icon-btn tool-btn" id="btnToggleChecklistMode" title="Alternar caixas de seleção">
+                    <span class="material-symbols-outlined">check_box</span>
+                  </button>
+
+                  <button class="icon-btn tool-btn" id="btnNewNoteArchive" title="Arquivar">
+                    <span class="material-symbols-outlined">archive</span>
+                  </button>
+                </div>
+
+                <div class="creator-actions">
+                  <button id="btnCloseCreator" class="btn-flat">Fechar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid de Notas -->
+        <div class="notes-feed" id="notesFeed">
+          <div class="notes-section hidden" id="pinnedSection">
+            <h3 class="section-title">FIXADAS</h3>
+            <div class="notes-grid" id="pinnedGrid"></div>
+          </div>
+
+          <div class="notes-section" id="othersSection">
+            <h3 class="section-title hidden" id="othersTitle">OUTRAS</h3>
+            <div class="notes-grid" id="othersGrid"></div>
+          </div>
+
+          <div class="empty-state hidden" id="emptyState">
+            <span class="material-symbols-outlined empty-icon" id="emptyIcon">lightbulb</span>
+            <h4 class="empty-title" id="emptyTitle">As notas adicionadas são exibidas aqui</h4>
+            <p class="empty-subtitle" id="emptySubtitle">Comece criando sua primeira anotação acima!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SEÇÃO IA ================= -->
+      <div class="view-section hidden" id="aiView">
+        <div class="ai-container">
+          
+          <!-- Cabeçalho da IA -->
+          <div class="ai-header">
+            <div class="ai-header-info">
+              <div class="ai-title-badge">
+                <span class="material-symbols-outlined ai-sparkles-hero">auto_awesome</span>
+                <h2>Assistente IA</h2>
+                <span class="model-badge">AI Studio</span>
+              </div>
+              <p class="ai-description">
+                Converse com a inteligência artificial sobre o conteúdo das suas notas. Tire dúvidas, crie resumos e conecte ideias instantaneamente.
+              </p>
+            </div>
+            <div class="ai-header-actions">
+              <button id="btnOpenApiKeyModal" class="btn-api-key" title="Configurar chave do AI Studio">
+                <span class="material-symbols-outlined">key</span>
+                <span id="apiKeyBtnText">Chave da API</span>
+                <span class="api-status-dot" id="apiKeyStatusDot"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Conteúdo Dividido da IA -->
+          <div class="ai-workspace">
+            
+            <!-- Painel Esquerdo: Seleção de Contexto de Notas -->
+            <div class="ai-context-panel">
+              <div class="context-panel-header">
+                <div class="context-panel-title">
+                  <span class="material-symbols-outlined">dataset</span>
+                  <h3>Notas em Contexto</h3>
+                </div>
+                <span class="context-counter-badge" id="aiSelectedCounter">0 selecionadas</span>
+              </div>
+
+              <div class="context-quick-select">
+                <button id="btnSelectAllNotes" class="btn-chip">Todas</button>
+                <button id="btnSelectPinnedNotes" class="btn-chip">Fixadas</button>
+                <button id="btnClearSelectedNotes" class="btn-chip">Limpar</button>
+              </div>
+
+              <div class="context-notes-list" id="aiNotesSelectorList"></div>
+            </div>
+
+            <!-- Painel Direito: Chat Conversacional -->
+            <div class="ai-chat-panel">
+              <div class="ai-quick-prompts" id="aiQuickPrompts">
+                <span class="quick-prompts-label">Sugestões rápidas:</span>
+                <button class="prompt-chip" data-prompt="Faça um resumo executivo claro e estruturado dos pontos principais das notas selecionadas.">
+                  <span class="material-symbols-outlined">summarize</span> Resumir notas
+                </button>
+                <button class="prompt-chip" data-prompt="Com base nas tarefas e itens das notas selecionadas, monte um plano de ação ordenado por prioridade.">
+                  <span class="material-symbols-outlined">checklist</span> Plano de ação
+                </button>
+                <button class="prompt-chip" data-prompt="Analise as notas selecionadas e aponte temas comuns, padrões, ideias complementares ou possíveis lacunas.">
+                  <span class="material-symbols-outlined">hub</span> Conectar ideias
+                </button>
+                <button class="prompt-chip" data-prompt="Redija um rascunho de e-mail profissional e amigável sintetizando os tópicos destas anotações.">
+                  <span class="material-symbols-outlined">mail</span> Rascunho de e-mail
+                </button>
+              </div>
+
+              <div class="ai-messages-area" id="aiMessagesArea">
+                <div class="ai-welcome-card" id="aiWelcomeCard">
+                  <div class="ai-avatar-large">
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                  </div>
+                  <h3>Como a IA pode te ajudar hoje?</h3>
+                  <p>Marque uma ou mais notas no painel ao lado e faça qualquer pergunta, solicite análises ou gere novos conteúdos!</p>
+                </div>
+              </div>
+
+              <div class="ai-input-bar-container">
+                <div class="ai-input-bar">
+                  <textarea id="aiPromptInput" placeholder="Pergunte à IA sobre as notas selecionadas... (Shift+Enter para nova linha)" rows="1"></textarea>
+                  <button id="btnSendAiMessage" class="icon-btn btn-send-ai" title="Enviar mensagem">
+                    <span class="material-symbols-outlined">arrow_upward</span>
+                  </button>
+                </div>
+                <div class="ai-footer-note">
+                  <span>Alimentado por AI Studio. As notas marcadas são enviadas como contexto da conversa.</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ================= MODAIS ================= -->
+
+  <!-- Modal de Edição de Nota -->
+  <div class="modal-backdrop hidden" id="editNoteModal">
+    <div class="modal-dialog note-modal-card" id="modalCard">
+      <div class="modal-header">
+        <input type="text" id="modalNoteTitle" placeholder="Título" class="modal-title-input">
+        <button id="btnModalPin" class="icon-btn pin-btn" title="Fixar nota">
+          <span class="material-symbols-outlined">push_pin</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div id="modalTextBody">
+          <textarea id="modalNoteContent" placeholder="Nota" rows="6" class="modal-textarea"></textarea>
+        </div>
+        <div id="modalChecklistBody" class="creator-checklist-area hidden">
+          <div id="modalChecklistItems" class="checklist-items-container"></div>
+          <div class="checklist-add-row">
+            <span class="material-symbols-outlined add-check-icon">add</span>
+            <input type="text" id="modalNewChecklistInput" placeholder="Item da lista" class="checklist-input">
+          </div>
+        </div>
+        <div id="modalLabelsList" class="card-labels-container"></div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-tools">
+          <div class="popover-wrapper">
+            <button class="icon-btn tool-btn" id="btnModalColor" title="Opções de plano de fundo">
+              <span class="material-symbols-outlined">palette</span>
+            </button>
+            <div class="color-palette-popover hidden" id="modalColorPalette"></div>
+          </div>
+          <div class="popover-wrapper">
+            <button class="icon-btn tool-btn" id="btnModalLabel" title="Marcadores">
+              <span class="material-symbols-outlined">label</span>
+            </button>
+            <div class="label-picker-popover hidden" id="modalLabelPicker"></div>
+          </div>
+          <button class="icon-btn tool-btn" id="btnModalToggleChecklist" title="Alternar caixas de seleção">
+            <span class="material-symbols-outlined">check_box</span>
+          </button>
+          <button class="icon-btn tool-btn" id="btnModalArchive" title="Arquivar">
+            <span class="material-symbols-outlined">archive</span>
+          </button>
+          <button class="icon-btn tool-btn" id="btnModalDelete" title="Mover para a lixeira">
+            <span class="material-symbols-outlined">delete</span>
+          </button>
+          <button class="icon-btn tool-btn" id="btnModalAskAi" title="Perguntar à IA sobre esta nota">
+            <span class="material-symbols-outlined sparkles-icon">sparkles</span>
+          </button>
+        </div>
+        <div class="modal-actions">
+          <button id="btnCloseModal" class="btn-flat">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Gerenciamento de Marcadores -->
+  <div class="modal-backdrop hidden" id="labelsModal">
+    <div class="modal-dialog labels-dialog">
+      <h3 class="labels-dialog-title">Editar marcadores</h3>
+      
+      <div class="add-label-row">
+        <button class="icon-btn" id="btnClearNewLabel" title="Limpar">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <input type="text" id="newLabelInput" placeholder="Criar novo marcador" class="new-label-input">
+        <button class="icon-btn" id="btnSaveNewLabel" title="Criar marcador">
+          <span class="material-symbols-outlined">check</span>
+        </button>
+      </div>
+
+      <div class="existing-labels-list" id="existingLabelsList"></div>
+
+      <div class="labels-dialog-footer">
+        <button id="btnCloseLabelsModal" class="btn-flat">Concluído</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Configuração da Chave da API -->
+  <div class="modal-backdrop hidden" id="apiKeyModal">
+    <div class="modal-dialog api-key-dialog">
+      <div class="api-dialog-header">
+        <div class="api-dialog-title">
+          <span class="material-symbols-outlined key-icon">vpn_key</span>
+          <h3>Configurar Chave da API</h3>
+        </div>
+        <button class="icon-btn" id="btnCloseApiKeyModal">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <p class="api-dialog-desc">
+        Para usar o assistente de IA sobre suas anotações, insira sua chave gratuita de API do <strong>AI Studio</strong>. A chave é salva apenas localmente no seu próprio navegador.
+      </p>
+
+      <div class="api-key-input-group">
+        <label for="apiKeyInput">Chave da API (AI Studio):</label>
+        <div class="api-input-wrapper">
+          <input type="password" id="apiKeyInput" placeholder="AIzaSy..." autocomplete="off">
+          <button class="icon-btn" id="btnToggleApiKeyVisibility" title="Mostrar/ocultar chave">
+            <span class="material-symbols-outlined" id="keyVisibilityIcon">visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="api-help-links">
+        <span>Não tem uma chave? </span>
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer">
+          Obter chave gratuita no AI Studio <span class="material-symbols-outlined external-link-icon">open_in_new</span>
+        </a>
+      </div>
+
+      <div class="api-dialog-footer">
+        <button id="btnClearApiKey" class="btn-text-danger">Remover chave</button>
+        <button id="btnSaveApiKey" class="btn-primary">Salvar chave</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificação Toast / Snackbar -->
+  <div class="snackbar hidden" id="snackbar">
+    <span class="snackbar-message" id="snackbarMessage">Nota movida para a lixeira</span>
+    <button class="snackbar-action" id="snackbarAction">Desfazer</button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="ai.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
