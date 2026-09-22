@@ -93,6 +93,47 @@ test('valid JSON API is selected', async t => {
   assert.equal(w.App.notes.length, 0);
 });
 
+test('chat, OCR and voice use the supported Gemini model', async t => {
+  const w = await boot(t, async () => new Response('[]', { headers: { 'Content-Type': 'application/json' } }));
+  const ai = w.App.ai;
+  w.localStorage.setItem(ai.apiKeyStorageKey, 'test-key-placeholder');
+  const requests = [];
+  w.fetch = async (url, options) => {
+    const body = JSON.parse(options.body);
+    requests.push({ url, body });
+    const text = body.generationConfig.responseMimeType === 'application/json'
+      ? JSON.stringify({ title: 'Tarefa', type: 'checklist', checklist_items: ['Revisar nota'] })
+      : 'Resposta de teste';
+    return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text }] } }] }));
+  };
+  ai.promptInput.value = 'Resuma as notas';
+  await ai.sendMessage();
+  assert.equal(ai.chatHistory.at(-1).parts[0].text, 'Resposta de teste');
+  assert.equal(await ai.performOCR('data:image/png;base64,dGVzdA==', 'image/png'), 'Resposta de teste');
+  const transcript = await ai.structureVoiceTranscript('Revisar nota');
+  assert.equal(transcript.checklist_items[0].text, 'Revisar nota');
+  assert.equal(requests.length, 3);
+  for (const request of requests) {
+    assert.equal(new URL(request.url).pathname, '/v1beta/models/gemini-3.6-flash:generateContent');
+  }
+  assert.equal(requests[1].body.contents[0].parts[1].inlineData.mimeType, 'image/png');
+});
+
+test('model errors show the API message without blaming the API key', async t => {
+  const w = await boot(t, async () => new Response('[]', { headers: { 'Content-Type': 'application/json' } }));
+  const ai = w.App.ai;
+  w.localStorage.setItem(ai.apiKeyStorageKey, 'test-key-placeholder');
+  w.fetch = async () => new Response(JSON.stringify({ error: { message: 'This model is no longer available.' } }), { status: 404 });
+  w.console.error = () => {};
+  ai.promptInput.value = 'Teste';
+  await ai.sendMessage();
+  const message = ai.messagesArea.textContent;
+  assert.match(message, /This model is no longer available/);
+  assert.doesNotMatch(message, /Verifique se a sua chave|cota ativa|⚠/);
+  assert.equal(ai.isGenerating, false);
+  assert.equal(ai.btnSend.disabled, false);
+});
+
 for (const [name, response] of [
   ['network failure', () => { throw new TypeError('Failed to fetch'); }],
   ['HTTP error', () => new Response('Unavailable', { status: 500 })],

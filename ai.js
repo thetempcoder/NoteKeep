@@ -9,7 +9,7 @@ class AIService {
     this.apiKeyStorageKey = 'notekeep_ai_api_key';
     this.selectedNoteIds = new Set();
     this.chatHistory = [];
-    this.modelName = atob('Z2VtaW5pLTIuNS1mbGFzaA=='); // modelo do AI Studio
+    this.modelName = 'gemini-3.6-flash';
     this.isGenerating = false;
 
     this.initElements();
@@ -343,7 +343,7 @@ class AIService {
     } catch (err) {
       console.error('Erro ao consultar IA:', err);
       loadingEl.remove();
-      this.appendMessage('assistant', `⚠️ **Erro ao consultar a IA:**\n${err.message}\n\n*Verifique se a sua chave do AI Studio está correta e com cota ativa.*`, true);
+      this.appendMessage('assistant', `**Erro ao consultar a IA:**\n${err.message}`, true);
     } finally {
       this.isGenerating = false;
       this.btnSend.disabled = false;
