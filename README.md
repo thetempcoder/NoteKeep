@@ -1,77 +1,52 @@
-﻿# NoteKeep com Assistente de IA âœ¨
+# NoteKeep
 
-O **NoteKeep** Ã© uma aplicaÃ§Ã£o moderna de anotaÃ§Ãµes com suporte a backend em **PHP (API REST + SQLite)**, persistÃªncia adaptativa (**LocalStorage**) e uma aba inteligente integrada Ã  **API do AI Studio**.
+Aplicativo de anotações em português, feito com HTML, CSS e JavaScript. Funciona com armazenamento local no navegador ou com uma API PHP e banco SQLite.
 
----
+## Executar no Windows
 
-## ðŸš€ Como Executar
+### Armazenamento no navegador
 
-VocÃª tem duas formas muito fÃ¡ceis de rodar o projeto no seu computador:
+Execute `iniciar_navegador.bat` e acesse `http://localhost:8000`. O script usa Python 3, disponível como `python` ou `py -3`. Mantenha a janela do servidor aberta enquanto usa o aplicativo; encerre com Ctrl+C.
 
-### OpÃ§Ã£o 1: Sem PHP instalado (ExecuÃ§Ã£o Imediata)
-DÃª um duplo clique no arquivo:
-```
-iniciar_navegador.bat
-```
-* O script iniciarÃ¡ um servidor local rÃ¡pido ou abrirÃ¡ o arquivo `index.html` no seu navegador padrÃ£o.
-* Todas as suas notas, checklists e configuraÃ§Ãµes ficam salvas no armazenamento local do navegador (`LocalStorage`).
+Sem Python, abra `index.html` manualmente. Alguns recursos, como voz e criptografia, dependem do suporte do navegador e podem exigir execução em localhost.
 
-### OpÃ§Ã£o 2: Com PHP e Banco SQLite
-Quando vocÃª tiver o PHP instalado e no seu PATH do Windows:
-```
-iniciar_php.bat
-```
-* Isso iniciarÃ¡ o servidor PHP embutido em `http://localhost:8000`.
-* As notas e marcadores serÃ£o gravados automaticamente no banco de dados SQLite em `data/keep.db`.
+Notas e marcadores ficam no LocalStorage. Use sempre o mesmo navegador e endereço para acessar esses dados. Limpar os dados do site também remove as notas locais.
 
----
+### PHP e SQLite
 
-## âœ¨ Funcionalidades
+Execute `iniciar_php.bat` e acesse `http://localhost:8000`. É necessário PHP com a extensão `pdo_sqlite` habilitada. O banco é criado em `data/keep.db`.
 
-### 1. Interface & Produtividade
-* **Design Moderno**: Ãcones limpos, sombras dinÃ¢micas e tipografia refinada.
-* **Paleta de Cores**: 11 tons pastÃ©is (Coral, PÃªssego, Areia, Menta, SÃ¡lvia, NÃ©voa, Tempestade, CrepÃºsculo, Flor, Argila e Giz).
-* **Modo Escuro / Claro**: Alterne facilmente pelo botÃ£o de tema no topo direito.
-* **Layout Masonry Responsivo**: Os cartÃµes se organizam de forma fluida conforme o tamanho da nota.
-* **Alternador de VisualizaÃ§Ã£o**: Alterne entre modo grade (cartÃµes) e modo lista.
-* **Pesquisa em Tempo Real**: Filtro instantÃ¢neo por tÃ­tulo, conteÃºdo, checklists ou tags.
-* **Notas Fixadas**: SeÃ§Ã£o "FIXADAS" separada no topo com prioridade.
-* **Checklists Interativos**: Adicione itens, marque como concluÃ­do com riscado e contagem.
-* **Modal de EdiÃ§Ã£o Completo**: Clique em qualquer cartÃ£o para editar com salvamento automÃ¡tico ao fechar.
-* **Marcadores (Etiquetas)**: Crie, renomeie e exclua tags personalizadas pelo menu lateral.
-* **Lixeira e Arquivo**: Mova notas para a lixeira (com botÃ£o de Desfazer via toast) ou arquive-as.
+O script procura PHP no PATH, em `php/php.exe` dentro do projeto e nas pastas padrão de PHP, XAMPP e Laragon no disco C. Para outra instalação, defina a variável `PHP_BINARY` com o caminho completo de `php.exe`.
 
----
+Se PHP não for encontrado, o script inicia o modo local pelo iniciador Python e informa a mudança. Se faltar `pdo_sqlite`, mostra como habilitar a extensão. Erros de inicialização permanecem visíveis na janela.
 
-### 2. Assistente de IA (AI Studio)
-* **Aba Dedicada:** Acesse a aba **IA** no menu lateral ou clique no botÃ£o colorido no topo.
-* **Sua Chave de API:** Clique em **"Chave da API"** e insira sua chave gratuita obtida no [AI Studio](https://aistudio.google.com/app/apikey). A chave fica salva de forma segura apenas no seu prÃ³prio navegador.
-* **SeleÃ§Ã£o de Notas de Contexto:** Escolha exatamente quais notas farÃ£o parte do contexto da conversa (com atalhos: "Todas", "Fixadas", "Limpar").
-* **Prompts RÃ¡pidos Inteligentes:**
-  * ðŸ’¡ *Resumir notas selecionadas*
-  * ðŸ“‹ *Criar plano de aÃ§Ã£o por prioridade*
-  * ðŸ” *Encontrar temas e ideias conectadas*
-  * âœï¸ *Redigir rascunho de e-mail baseado nas notas*
-* **Salvar como Nota:** Qualquer resposta gerada pela IA pode ser convertida diretamente em uma nova nota do NoteKeep com 1 clique!
+Execute apenas um servidor por vez: os dois scripts usam a porta 8000. Os modos local e SQLite têm dados separados; não há migração automática entre eles.
 
----
+## Recursos
 
-## ðŸ“‚ Estrutura do Projeto
+- Notas de texto, listas de tarefas, cores e notas fixadas.
+- Pesquisa, marcadores, arquivo e lixeira.
+- Temas claro e escuro, visualizações em grade, lista e Kanban.
+- Paleta de comandos com Ctrl+K e atalhos no editor com `/`.
+- Imagens, entrada por voz e proteção de notas com senha.
+- Assistente de IA para conversar sobre notas selecionadas, extrair texto de imagens e salvar respostas como notas.
 
-```
-NoteKeep/
-â”œâ”€â”€ api/
-â”‚   â”œâ”€â”€ db.php             # ConexÃ£o PDO com SQLite e criaÃ§Ã£o do schema
-â”‚   â”œâ”€â”€ notes.php          # API RESTful (GET, POST, PUT, DELETE) para notas
-â”‚   â””â”€â”€ labels.php         # API RESTful para marcadores
-â”œâ”€â”€ data/
-â”‚   â””â”€â”€ keep.db            # Banco de dados SQLite local (gerado automaticamente)
-â”œâ”€â”€ index.html             # Interface completa do aplicativo
-â”œâ”€â”€ styles.css             # Folha de estilo, temas e animaÃ§Ãµes
-â”œâ”€â”€ app.js                 # LÃ³gica de notas, masonry, checklists e persistÃªncia
-â”œâ”€â”€ ai.js                  # IntegraÃ§Ã£o com a IA do AI Studio
-â”œâ”€â”€ iniciar_php.bat        # Launcher para servidor PHP
-â”œâ”€â”€ iniciar_navegador.bat  # Launcher para navegador / Python
-â””â”€â”€ README.md              # DocumentaÃ§Ã£o do projeto
-```
+O assistente requer uma chave do Google AI Studio, configurada na aba IA. A chave fica no LocalStorage do navegador. Ao usar esses recursos, o conteúdo necessário à solicitação é enviado à API do Google. Disponibilidade e cobrança dependem da conta e do serviço.
 
+## Arquivos
+
+| Arquivo | Função |
+| --- | --- |
+| `index.html` | Interface |
+| `styles.css` | Estilos e temas |
+| `app.js` | Notas, interações e persistência |
+| `ai.js` | Integração com o assistente |
+| `api/notes.php` | API de notas |
+| `api/labels.php` | API de marcadores |
+| `api/db.php` | Conexão e criação do banco |
+| `iniciar_php.bat` | Inicialização com PHP |
+| `iniciar_navegador.bat` | Inicialização com Python |
+
+## Verificação
+
+Com Node.js instalado, execute `npm ci` e `npm test`. Os testes usam um DOM simulado, sem abrir navegador, e verificam inicialização, detecção do armazenamento e interações básicas.

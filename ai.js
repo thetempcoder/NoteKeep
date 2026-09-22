@@ -1,6 +1,6 @@
-﻿/**
+/**
  * ==========================================================
- * ASSISTENTE IA - INTEGRAÃ‡ÃƒO AI STUDIO
+ * ASSISTENTE IA - INTEGRAÇÃO AI STUDIO
  * ==========================================================
  */
 
@@ -64,7 +64,7 @@ class AIService {
       if (e.target === this.apiKeyModal) this.closeApiKeyModal();
     });
 
-    // BotÃµes de seleÃ§Ã£o de contexto
+    // Botões de seleção de contexto
     this.btnSelectAll.addEventListener('click', () => this.selectAllNotes());
     this.btnSelectPinned.addEventListener('click', () => this.selectPinnedNotes());
     this.btnClearSelected.addEventListener('click', () => this.clearSelectedNotes());
@@ -84,7 +84,7 @@ class AIService {
       this.promptInput.style.height = Math.min(this.promptInput.scrollHeight, 120) + 'px';
     });
 
-    // Chips de prompts rÃ¡pidos
+    // Chips de prompts rápidos
     this.quickPrompts.addEventListener('click', (e) => {
       const chip = e.target.closest('.prompt-chip');
       if (chip) {
@@ -157,14 +157,14 @@ class AIService {
     if (activeNotes.length === 0) {
       this.notesSelectorList.innerHTML = `
         <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">
-          Nenhuma nota disponÃ­vel para seleÃ§Ã£o.
+          Nenhuma nota disponível para seleção.
         </div>
       `;
       this.updateSelectedCounter();
       return;
     }
 
-    // Se nenhuma estiver selecionada no inÃ­cio, seleciona as notas ativas por conveniÃªncia
+    // Se nenhuma estiver selecionada no início, seleciona as notas ativas por conveniência
     if (this.selectedNoteIds.size === 0 && activeNotes.length > 0) {
       activeNotes.slice(0, 5).forEach(n => this.selectedNoteIds.add(n.id));
     }
@@ -177,13 +177,13 @@ class AIService {
 
       let preview = note.content || '';
       if (note.type === 'checklist' && Array.isArray(note.checklist_items)) {
-        preview = note.checklist_items.map(i => (i.completed ? 'â˜‘ ' : 'â˜ ') + i.text).join(', ');
+        preview = note.checklist_items.map(i => (i.completed ? '[x] ' : '[ ] ') + i.text).join(', ');
       }
 
       itemEl.innerHTML = `
         <input type="checkbox" class="check-box-input" ${isSelected ? 'checked' : ''}>
         <div class="context-note-info">
-          <div class="context-note-title">${this.escapeHtml(note.title || 'Sem tÃ­tulo')}</div>
+          <div class="context-note-title">${this.escapeHtml(note.title || 'Sem título')}</div>
           <div class="context-note-snippet">${this.escapeHtml(preview || 'Nota em branco')}</div>
         </div>
       `;
@@ -247,10 +247,10 @@ class AIService {
 
     if (selectedNotes.length === 0) return '';
 
-    let text = "--- INÃCIO DAS NOTAS SELECIONADAS DO NOTEKEEP ---\n";
+    let text = "--- INÍCIO DAS NOTAS SELECIONADAS DO NOTEKEEP ---\n";
     selectedNotes.forEach((n, idx) => {
       text += `\n[NOTA ${idx + 1}]\n`;
-      text += `TÃ­tulo: ${n.title || '(Sem tÃ­tulo)'}\n`;
+      text += `Título: ${n.title || '(Sem título)'}\n`;
       if (n.labels && n.labels.length > 0) {
         text += `Marcadores: ${n.labels.join(', ')}\n`;
       }
@@ -260,7 +260,7 @@ class AIService {
           text += `  - [${item.completed ? 'X' : ' '}] ${item.text}\n`;
         });
       } else {
-        text += `ConteÃºdo: ${n.content || '(Vazio)'}\n`;
+        text += `Conteúdo: ${n.content || '(Vazio)'}\n`;
       }
     });
     text += "\n--- FIM DAS NOTAS SELECIONADAS ---\n";
@@ -282,7 +282,7 @@ class AIService {
       this.welcomeCard.classList.add('hidden');
     }
 
-    // Inserir mensagem do usuÃ¡rio na tela
+    // Inserir mensagem do usuário na tela
     this.appendMessage('user', userPrompt);
     this.promptInput.value = '';
     this.promptInput.style.height = 'auto';
@@ -296,15 +296,15 @@ class AIService {
       const apiKey = this.getApiKey();
       const notesContext = this.buildNotesContext();
 
-      // Montar conteÃºdo da requisiÃ§Ã£o para o AI Studio
+      // Montar conteúdo da requisição para o AI Studio
       let fullPrompt = "";
       if (notesContext) {
-        fullPrompt = `${notesContext}\n\nCom base nas anotaÃ§Ãµes acima fornecidas pelo usuÃ¡rio, responda Ã  seguinte solicitaÃ§Ã£o de forma clara, Ãºtil e bem estruturada:\n\n${userPrompt}`;
+        fullPrompt = `${notesContext}\n\nCom base nas anotações acima fornecidas pelo usuário, responda à seguinte solicitação de forma clara, útil e bem estruturada:\n\n${userPrompt}`;
       } else {
-        fullPrompt = `O usuÃ¡rio estÃ¡ utilizando o NoteKeep, mas nenhuma nota foi selecionada no momento.\nPergunta do usuÃ¡rio: ${userPrompt}`;
+        fullPrompt = `O usuário está utilizando o NoteKeep, mas nenhuma nota foi selecionada no momento.\nPergunta do usuário: ${userPrompt}`;
       }
 
-      // Adicionar ao histÃ³rico de sessÃ£o
+      // Adicionar ao histórico de sessão
       this.chatHistory.push({
         role: "user",
         parts: [{ text: fullPrompt }]
@@ -328,9 +328,9 @@ class AIService {
       }
 
       const result = await response.json();
-      const answerText = result.candidates?.[0]?.content?.parts?.[0]?.text || "NÃ£o foi possÃ­vel obter uma resposta da IA.";
+      const answerText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível obter uma resposta da IA.";
 
-      // Adicionar resposta do modelo ao histÃ³rico
+      // Adicionar resposta do modelo ao histórico
       this.chatHistory.push({
         role: "model",
         parts: [{ text: answerText }]
@@ -343,7 +343,7 @@ class AIService {
     } catch (err) {
       console.error('Erro ao consultar IA:', err);
       loadingEl.remove();
-      this.appendMessage('assistant', `âš ï¸ **Erro ao consultar a IA:**\n${err.message}\n\n*Verifique se a sua chave do AI Studio estÃ¡ correta e com cota ativa.*`, true);
+      this.appendMessage('assistant', `⚠️ **Erro ao consultar a IA:**\n${err.message}\n\n*Verifique se a sua chave do AI Studio está correta e com cota ativa.*`, true);
     } finally {
       this.isGenerating = false;
       this.btnSend.disabled = false;
@@ -383,7 +383,7 @@ class AIService {
       </div>
     `;
 
-    // Eventos dos botÃµes de aÃ§Ã£o
+    // Eventos dos botões de ação
     if (role === 'assistant' && !isError) {
       const btnCopy = msgEl.querySelector('.btn-copy-response');
       btnCopy.addEventListener('click', () => {
@@ -397,7 +397,7 @@ class AIService {
       const btnSave = msgEl.querySelector('.btn-save-as-note');
       btnSave.addEventListener('click', () => {
         if (window.App && window.App.createNoteFromAI) {
-          window.App.createNoteFromAI('Resposta da IA âœ¨', text);
+          window.App.createNoteFromAI('Resposta da IA', text);
           btnSave.innerHTML = `<span class="material-symbols-outlined">check</span> Nota Criada!`;
           btnSave.disabled = true;
         }
@@ -435,19 +435,19 @@ class AIService {
     if (!text) return '';
     let html = this.escapeHtml(text);
 
-    // Blocos de cÃ³digo ```code```
+    // Blocos de código ```code```
     html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
 
-    // CÃ³digo inline `code`
+    // Código inline `code`
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
 
     // Negrito **texto**
     html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
-    // ItÃ¡lico *texto*
+    // Itálico *texto*
     html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
-    // Quebras de linha e parÃ¡grafos
+    // Quebras de linha e parágrafos
     const lines = html.split('\n');
     let inList = false;
     let result = '';
@@ -483,9 +483,104 @@ class AIService {
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
   }
+
+  /* OCR Inteligente com Gemini Vision */
+  async performOCR(base64Data, mimeType = 'image/jpeg') {
+    if (!this.hasApiKey()) {
+      this.openApiKeyModal();
+      throw new Error('Configure sua chave de API do AI Studio para utilizar o OCR com inteligência artificial.');
+    }
+    const cleanBase64 = base64Data.includes('base64,') ? base64Data.split('base64,')[1] : base64Data;
+    const apiKey = this.getApiKey();
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${this.modelName}:generateContent?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          role: 'user',
+          parts: [
+            { text: 'Você é um assistente OCR de alta precisão. Analise esta imagem e extraia todo o texto legível. Preserve títulos, parágrafos, listas e itens numerados. Não invente nada. Se houver listas de tarefas, formate como "- item". Responda diretamente com o texto extraído, sem introduções ou explicações adicionais.' },
+            {
+              inlineData: {
+                mimeType: mimeType,
+                data: cleanBase64
+              }
+            }
+          ]
+        }],
+        generationConfig: {
+          temperature: 0.1,
+          maxOutputTokens: 2048
+        }
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `Erro no OCR: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+  }
+
+  /* Voice-to-Action: Transforma áudio livre em tarefas estruturadas */
+  async structureVoiceTranscript(rawText) {
+    if (!this.hasApiKey()) {
+      return {
+        title: '',
+        content: rawText,
+        type: 'text',
+        checklist_items: []
+      };
+    }
+
+    const apiKey = this.getApiKey();
+    const prompt = `Analise a seguinte transcrição de áudio espontânea em português:\n"${rawText}"\n\nOrganize e estruture isso de forma inteligente no formato JSON estrito:\n{\n  "title": "Título curto e conciso para a nota",\n  "type": "text" ou "checklist" (use "checklist" se forem tarefas, compras ou afazeres),\n  "content": "Texto formatado e limpo se o tipo for text, ou deixe vazio se for checklist",\n  "checklist_items": ["item 1", "item 2"]\n}\nResponda APENAS o JSON válido sem nenhum bloco de markdown ao redor.`;
+
+    try {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${this.modelName}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.2,
+            responseMimeType: "application/json"
+          }
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(text);
+        return {
+          title: parsed.title || '',
+          content: parsed.content || '',
+          type: parsed.type === 'checklist' ? 'checklist' : 'text',
+          checklist_items: (parsed.checklist_items || []).map(t => ({
+            id: 'chk_' + Math.random().toString(36).substr(2, 4),
+            text: t,
+            completed: false
+          }))
+        };
+      }
+    } catch (e) {
+      console.warn('Falha na estruturação com IA, usando texto puro:', e);
+    }
+
+    return {
+      title: '',
+      content: rawText,
+      type: 'text',
+      checklist_items: []
+    };
+  }
 }
 
-// Estilo de rotaÃ§Ã£o para o Ã­cone de carregamento
+// Estilo de rotação para o ícone de carregamento
 const style = document.createElement('style');
 style.textContent = `
   @keyframes spin {

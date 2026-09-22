@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NoteKeep</title>
+  <title>NoteKeepApp</title>
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
   <!-- Google Fonts: Roboto, Google Sans e Material Symbols Outlined -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,10 +19,10 @@
       <button id="btnMenuToggle" class="icon-btn" title="Menu principal" aria-label="Menu principal">
         <span class="material-symbols-outlined">menu</span>
       </button>
-      <div class="logo-container" id="logoApp" title="NoteKeep">
-        <img src="assets/icon.svg" alt="NoteKeep Logo" class="notekeep-logo-img">
+      <div class="logo-container" id="logoApp" title="NoteKeepApp">
+        <img src="assets/icon.svg" alt="NoteKeepApp Logo" class="notekeep-logo-img">
         <span class="app-title">
-          <span class="title-note">Note</span><span class="title-keep">Keep</span>
+          <span class="title-note">Note</span><span class="title-keep">Keep</span><span class="title-app">App</span>
         </span>
       </div>
     </div>
@@ -34,6 +34,7 @@
           <span class="material-symbols-outlined">search</span>
         </button>
         <input type="text" id="searchInput" placeholder="Pesquisar suas notas..." autocomplete="off">
+        <span class="search-shortcut-badge" id="btnOpenCommandPalette" title="Abrir Command Palette (Ctrl+K)">⌘K / Ctrl+K</span>
         <button id="btnClearSearch" class="icon-btn clear-search-btn hidden" title="Limpar pesquisa">
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -42,6 +43,12 @@
 
     <!-- Ações no Topo Direito -->
     <div class="top-bar-right">
+      <button id="btnToggleSound" class="icon-btn" title="Efeitos sonoros (Ativado)">
+        <span class="material-symbols-outlined" id="soundIcon">volume_up</span>
+      </button>
+      <button id="btnToggleKanban" class="icon-btn" title="Alternar para Quadro Kanban">
+        <span class="material-symbols-outlined" id="kanbanIcon">view_kanban</span>
+      </button>
       <button id="btnRefresh" class="icon-btn" title="Atualizar notas">
         <span class="material-symbols-outlined">refresh</span>
       </button>
@@ -66,6 +73,15 @@
         <button class="nav-item active" data-view="notes" id="navNotes">
           <span class="material-symbols-outlined nav-icon">lightbulb</span>
           <span class="nav-label">Notas</span>
+        </button>
+        <button class="nav-item" data-view="kanban" id="navKanban">
+          <span class="material-symbols-outlined nav-icon">view_kanban</span>
+          <span class="nav-label">Quadro Kanban</span>
+        </button>
+        <button class="nav-item" data-view="vault" id="navVault">
+          <span class="material-symbols-outlined nav-icon">lock</span>
+          <span class="nav-label">Cofre Seguro</span>
+          <span class="ai-badge" style="background: linear-gradient(135deg, #f5a518, #ff6b6b);">AES</span>
         </button>
         <button class="nav-item" data-view="reminders" id="navReminders">
           <span class="material-symbols-outlined nav-icon">notifications</span>
@@ -126,12 +142,15 @@
           <div class="note-creator-card" id="noteCreatorCard">
             <!-- Estado Recolhido -->
             <div class="note-creator-collapsed" id="creatorCollapsed">
-              <span class="creator-placeholder">Criar uma nota...</span>
+              <span class="creator-placeholder">Criar uma nota... (Dica: digite '/' para comandos)</span>
               <div class="creator-quick-actions">
                 <button class="icon-btn" id="btnQuickChecklist" title="Nova lista com caixas de seleção">
                   <span class="material-symbols-outlined">check_box</span>
                 </button>
-                <button class="icon-btn" id="btnQuickImage" title="Nova nota com imagem">
+                <button class="icon-btn" id="btnQuickVoice" title="Gravar nota por voz (Voice-to-Action)">
+                  <span class="material-symbols-outlined">mic</span>
+                </button>
+                <button class="icon-btn" id="btnQuickImage" title="Nova nota com imagem / OCR">
                   <span class="material-symbols-outlined">image</span>
                 </button>
               </div>
@@ -146,9 +165,13 @@
                 </button>
               </div>
 
+              <!-- Preview de Imagem Anexada -->
+              <div id="creatorImagePreviewContainer" class="hidden"></div>
+              <input type="file" id="creatorImageInput" accept="image/*" class="hidden">
+
               <!-- Conteúdo em Texto -->
               <div id="creatorTextContentArea">
-                <textarea id="newNoteContent" placeholder="Criar uma nota..." rows="3" class="creator-textarea"></textarea>
+                <textarea id="newNoteContent" placeholder="Criar uma nota... (Digite / para comandos rápidos)" rows="3" class="creator-textarea"></textarea>
               </div>
 
               <!-- Conteúdo em Checklist -->
@@ -182,6 +205,14 @@
 
                   <button class="icon-btn tool-btn" id="btnToggleChecklistMode" title="Alternar caixas de seleção">
                     <span class="material-symbols-outlined">check_box</span>
+                  </button>
+
+                  <button class="icon-btn tool-btn" id="btnVoiceInput" title="Gravar por voz (Voice-to-Action)">
+                    <span class="material-symbols-outlined">mic</span>
+                  </button>
+
+                  <button class="icon-btn tool-btn" id="btnAttachImage" title="Anexar imagem e extrair texto com IA (OCR)">
+                    <span class="material-symbols-outlined">image</span>
                   </button>
 
                   <button class="icon-btn tool-btn" id="btnNewNoteArchive" title="Arquivar">
@@ -310,6 +341,54 @@
         </div>
       </div>
 
+      <!-- ================= SEÇÃO KANBAN ================= -->
+      <div class="view-section hidden" id="kanbanView">
+        <div class="kanban-header-bar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+          <div>
+            <h2 style="font-size:22px; font-weight:700;">Quadro Kanban Ágil</h2>
+            <p style="font-size:13px; color:var(--text-muted);">Organize suas notas e checklists em fluxo visual de trabalho.</p>
+          </div>
+          <button id="btnNewKanbanNote" class="btn-primary" style="display:flex; align-items:center; gap:6px;">
+            <span class="material-symbols-outlined">add</span> Nova Nota
+          </button>
+        </div>
+        <div class="kanban-board-container" id="kanbanBoardContainer">
+          <!-- Coluna A Fazer -->
+          <div class="kanban-column" id="kanbanColTodo">
+            <div class="kanban-column-header">
+              <div class="kanban-column-title-group">
+                <span class="kanban-column-dot dot-todo"></span>
+                <span class="kanban-column-title">A Fazer / Ideias</span>
+              </div>
+              <span class="kanban-column-count" id="kanbanCountTodo">0</span>
+            </div>
+            <div class="kanban-column-cards" id="kanbanCardsTodo"></div>
+          </div>
+          <!-- Coluna Em Andamento -->
+          <div class="kanban-column" id="kanbanColInProgress">
+            <div class="kanban-column-header">
+              <div class="kanban-column-title-group">
+                <span class="kanban-column-dot dot-inprogress"></span>
+                <span class="kanban-column-title">Em Andamento</span>
+              </div>
+              <span class="kanban-column-count" id="kanbanCountInProgress">0</span>
+            </div>
+            <div class="kanban-column-cards" id="kanbanCardsInProgress"></div>
+          </div>
+          <!-- Coluna Concluído -->
+          <div class="kanban-column" id="kanbanColDone">
+            <div class="kanban-column-header">
+              <div class="kanban-column-title-group">
+                <span class="kanban-column-dot dot-done"></span>
+                <span class="kanban-column-title">Concluído</span>
+              </div>
+              <span class="kanban-column-count" id="kanbanCountDone">0</span>
+            </div>
+            <div class="kanban-column-cards" id="kanbanCardsDone"></div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -325,9 +404,13 @@
         </button>
       </div>
 
+      <!-- Preview de Imagem no Modal -->
+      <div id="modalImagePreviewContainer" class="hidden" style="padding: 0 16px;"></div>
+      <input type="file" id="modalImageInput" accept="image/*" class="hidden">
+
       <div class="modal-body">
         <div id="modalTextBody">
-          <textarea id="modalNoteContent" placeholder="Nota" rows="6" class="modal-textarea"></textarea>
+          <textarea id="modalNoteContent" placeholder="Nota... (Digite / para comandos)" rows="6" class="modal-textarea"></textarea>
         </div>
         <div id="modalChecklistBody" class="creator-checklist-area hidden">
           <div id="modalChecklistItems" class="checklist-items-container"></div>
@@ -356,6 +439,15 @@
           <button class="icon-btn tool-btn" id="btnModalToggleChecklist" title="Alternar caixas de seleção">
             <span class="material-symbols-outlined">check_box</span>
           </button>
+          <button class="icon-btn tool-btn" id="btnModalVoiceInput" title="Gravar por voz (Voice-to-Action)">
+            <span class="material-symbols-outlined">mic</span>
+          </button>
+          <button class="icon-btn tool-btn" id="btnModalAttachImage" title="Anexar imagem e extrair texto (OCR)">
+            <span class="material-symbols-outlined">image</span>
+          </button>
+          <button class="icon-btn tool-btn" id="btnModalLockNote" title="Trancar/Destrancar nota no Cofre Seguro (AES-256)">
+            <span class="material-symbols-outlined" id="modalLockIcon">lock</span>
+          </button>
           <button class="icon-btn tool-btn" id="btnModalArchive" title="Arquivar">
             <span class="material-symbols-outlined">archive</span>
           </button>
@@ -370,6 +462,105 @@
           <button id="btnCloseModal" class="btn-flat">Fechar</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Command Palette (Ctrl + K) -->
+  <div class="command-palette-backdrop hidden" id="commandPaletteModal">
+    <div class="command-palette-card">
+      <div class="command-palette-header">
+        <span class="material-symbols-outlined search-icon">terminal</span>
+        <input type="text" id="commandPaletteInput" class="command-palette-input" placeholder="Digite um comando ou busque uma nota..." autocomplete="off">
+        <span class="search-shortcut-badge">ESC para sair</span>
+      </div>
+      <div class="command-palette-results" id="commandPaletteResults"></div>
+      <div class="command-palette-footer">
+        <div class="palette-shortcuts-guide">
+          <span><kbd>↑</kbd> <kbd>↓</kbd> navegar</span>
+          <span><kbd>Enter</kbd> executar</span>
+          <span><kbd>Esc</kbd> fechar</span>
+        </div>
+        <span>NoteKeep Command Hub</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Senha do Cofre Criptografado (AES-GCM) -->
+  <div class="modal-backdrop hidden" id="vaultPasswordModal">
+    <div class="vault-modal-card">
+      <div class="vault-modal-icon">
+        <span class="material-symbols-outlined">lock</span>
+      </div>
+      <h3 class="vault-modal-title" id="vaultModalTitle">Cofre Criptografado</h3>
+      <p class="vault-modal-desc" id="vaultModalDesc">
+        Protegido por criptografia militar AES-GCM 256 bits. Insira sua senha mestre para desbloquear.
+      </p>
+
+      <div class="vault-input-group">
+        <div class="vault-input-wrapper">
+          <input type="password" id="vaultPasswordInput" placeholder="Sua senha mestre..." autocomplete="off">
+          <button class="icon-btn" id="btnToggleVaultPassVisibility" style="width:36px; height:36px;" title="Ver senha">
+            <span class="material-symbols-outlined" id="vaultPassEyeIcon">visibility</span>
+          </button>
+        </div>
+        <div class="vault-error-msg" id="vaultErrorMsg">Senha incorreta. Tente novamente.</div>
+      </div>
+
+      <div class="vault-modal-actions">
+        <button id="btnCancelVaultModal" class="btn-flat">Cancelar</button>
+        <button id="btnConfirmVaultModal" class="btn-primary">Desbloquear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Flutuante de Gravação de Voz -->
+  <div class="voice-toast-modal hidden" id="voiceToastModal">
+    <div class="voice-wave-animation">
+      <span class="voice-bar"></span>
+      <span class="voice-bar"></span>
+      <span class="voice-bar"></span>
+      <span class="voice-bar"></span>
+      <span class="voice-bar"></span>
+    </div>
+    <span style="font-size:14px; font-weight:600; color:var(--text-primary);" id="voiceStatusText">Ouvindo... Fale agora</span>
+    <button id="btnStopVoiceModal" class="btn-primary" style="padding: 6px 14px; font-size:12px; border-radius: 9999px;">Concluir</button>
+    <button id="btnCancelVoiceModal" class="icon-btn" style="width:32px; height:32px;" title="Cancelar gravação">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  <!-- Popover Flutuante de Slash Commands (/) -->
+  <div class="slash-menu-popover hidden" id="slashMenuPopover">
+    <div class="slash-menu-header">Comandos Rápidos</div>
+    <div class="slash-item" data-action="todo">
+      <span class="material-symbols-outlined slash-item-icon">check_box</span>
+      <span class="slash-item-label">Checklist de Tarefas</span>
+      <span class="slash-item-hint">/todo</span>
+    </div>
+    <div class="slash-item" data-action="h1">
+      <span class="material-symbols-outlined slash-item-icon">title</span>
+      <span class="slash-item-label">Título Principal</span>
+      <span class="slash-item-hint">/h1</span>
+    </div>
+    <div class="slash-item" data-action="h2">
+      <span class="material-symbols-outlined slash-item-icon">format_size</span>
+      <span class="slash-item-label">Subtítulo</span>
+      <span class="slash-item-hint">/h2</span>
+    </div>
+    <div class="slash-item" data-action="code">
+      <span class="material-symbols-outlined slash-item-icon">code</span>
+      <span class="slash-item-label">Bloco de Código</span>
+      <span class="slash-item-hint">/codigo</span>
+    </div>
+    <div class="slash-item" data-action="quote">
+      <span class="material-symbols-outlined slash-item-icon">format_quote</span>
+      <span class="slash-item-label">Citação / Destaque</span>
+      <span class="slash-item-hint">/citacao</span>
+    </div>
+    <div class="slash-item" data-action="ai">
+      <span class="material-symbols-outlined slash-item-icon sparkles-sidebar">auto_awesome</span>
+      <span class="slash-item-label">Expandir com IA</span>
+      <span class="slash-item-hint">/ia</span>
     </div>
   </div>
 

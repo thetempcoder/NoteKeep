@@ -38,10 +38,20 @@ try {
             is_trashed INTEGER DEFAULT 0,
             labels TEXT,              -- JSON array de strings
             reminder TEXT,
+            is_locked INTEGER DEFAULT 0,
+            encrypted_data TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
     ");
+
+    // Adiciona colunas caso tabela já existisse
+    try {
+        $pdo->exec("ALTER TABLE notes ADD COLUMN is_locked INTEGER DEFAULT 0");
+    } catch (Exception $e) {}
+    try {
+        $pdo->exec("ALTER TABLE notes ADD COLUMN encrypted_data TEXT");
+    } catch (Exception $e) {}
 
     // Criar tabela de marcadores se não existir
     $pdo->exec("

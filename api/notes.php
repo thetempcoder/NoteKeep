@@ -23,6 +23,7 @@ function formatNoteRow($row) {
     $row['is_pinned'] = (bool)$row['is_pinned'];
     $row['is_archived'] = (bool)$row['is_archived'];
     $row['is_trashed'] = (bool)$row['is_trashed'];
+    $row['is_locked'] = !empty($row['is_locked']);
     $row['checklist_items'] = json_decode($row['checklist_items'] ?: '[]', true);
     $row['labels'] = json_decode($row['labels'] ?: '[]', true);
     return $row;
@@ -64,15 +65,17 @@ switch ($method) {
         $isPinned = !empty($data['is_pinned']) ? 1 : 0;
         $isArchived = !empty($data['is_archived']) ? 1 : 0;
         $isTrashed = !empty($data['is_trashed']) ? 1 : 0;
+        $isLocked = !empty($data['is_locked']) ? 1 : 0;
+        $encryptedData = $data['encrypted_data'] ?? null;
         $labels = json_encode($data['labels'] ?? []);
         $reminder = $data['reminder'] ?? null;
         $now = date('Y-m-d H:i:s');
 
         $stmt = $pdo->prepare("
-            INSERT INTO notes (id, title, content, type, checklist_items, color, is_pinned, is_archived, is_trashed, labels, reminder, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO notes (id, title, content, type, checklist_items, color, is_pinned, is_archived, is_trashed, labels, reminder, is_locked, encrypted_data, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$noteId, $title, $content, $type, $checklist, $color, $isPinned, $isArchived, $isTrashed, $labels, $reminder, $now, $now]);
+        $stmt->execute([$noteId, $title, $content, $type, $checklist, $color, $isPinned, $isArchived, $isTrashed, $labels, $reminder, $isLocked, $encryptedData, $now, $now]);
 
         $stmt = $pdo->prepare("SELECT * FROM notes WHERE id = ?");
         $stmt->execute([$noteId]);
@@ -95,7 +98,8 @@ switch ($method) {
             'content' => 'content',
             'type' => 'type',
             'color' => 'color',
-            'reminder' => 'reminder'
+            'reminder' => 'reminder',
+            'encrypted_data' => 'encrypted_data'
         ];
 
         foreach ($fields as $key => $col) {
@@ -124,6 +128,10 @@ switch ($method) {
         if (array_key_exists('is_trashed', $data)) {
             $updates[] = "is_trashed = ?";
             $params[] = $data['is_trashed'] ? 1 : 0;
+        }
+        if (array_key_exists('is_locked', $data)) {
+            $updates[] = "is_locked = ?";
+            $params[] = $data['is_locked'] ? 1 : 0;
         }
 
         $updates[] = "updated_at = CURRENT_TIMESTAMP";
