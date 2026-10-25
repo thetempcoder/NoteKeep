@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <g id="Frame_02_Modo_Escuro_Cofre_AES256">
+
+    <rect width="1440" height="900" rx="16" fill="#202124" stroke="#5F6368" stroke-width="2"/>
+    <rect width="1440" height="64" fill="#202124"/>
+    <line x1="0" y1="64" x2="1440" y2="64" stroke="#5F6368" stroke-width="1"/>
+    <rect x="64" y="13" width="38" height="38" rx="10" fill="#F5A518"/>
+    <text x="114" y="40" font-family="Inter, sans-serif" font-weight="800" font-size="24" fill="#FFFFFF">NoteKeepApp (Dark Theme)</text>
+    <rect x="440" y="8" width="600" height="48" rx="8" fill="#2D2E30"/>
+    <text x="470" y="37" font-family="Roboto, sans-serif" font-size="15" fill="#9AA0A6">Cofre Seguro Zero-Knowledge (AES-256 GCM)...</text>
+
+    <!-- Sidebar Dark -->
+    <rect x="0" y="65" width="280" height="835" fill="#202124"/>
+    <text x="64" y="107" font-family="Roboto, sans-serif" font-size="14" fill="#9AA0A6">💡 Notas</text>
+    <text x="64" y="155" font-family="Roboto, sans-serif" font-size="14" fill="#9AA0A6">📋 Quadro Kanban</text>
+    <rect x="0" y="176" width="268" height="44" rx="22" fill="#41331C"/>
+    <text x="64" y="203" font-family="Roboto, sans-serif" font-weight="700" font-size="14" fill="#FDD663">🔒 Cofre Seguro (AES-256)</text>
+
+    <!-- Locked Note Card -->
+    <rect x="320" y="110" width="460" height="230" rx="12" fill="#28292C" stroke="#F5A518" stroke-width="2"/>
+    <circle cx="550" cy="160" r="26" fill="#41331C"/>
+    <text x="538" y="168" font-family="Roboto, sans-serif" font-size="22" fill="#F5A518">🔒</text>
+    <text x="435" y="212" font-family="Roboto, sans-serif" font-weight="700" font-size="16" fill="#E8EAED">Credenciais &amp; Chaves SSH</text>
+    <text x="425" y="238" font-family="Roboto, sans-serif" font-size="13" fill="#9AA0A6">Criptografia Militar AES-256 GCM (PBKDF2)</text>
+    <rect x="480" y="264" width="140" height="36" rx="18" fill="#E8EAED"/>
+    <text x="506" y="287" font-family="Roboto, sans-serif" font-weight="700" font-size="13" fill="#202124">🔑 Desbloquear</text>
+
+    <!-- Unlocked Coral Dark Card -->
+    <rect x="820" y="110" width="540" height="230" rx="12" fill="#77172E" stroke="#5F6368"/>
+    <text x="850" y="152" font-family="Roboto, sans-serif" font-weight="700" font-size="16" fill="#E8EAED">Arquitetura do Banco (Nota Desbloqueada 🔓)</text>
+    <text x="850" y="188" font-family="Roboto, sans-serif" font-size="14" fill="#E8EAED">Payload JSON cifrado via Web Crypto API:</text>
+    <text x="850" y="216" font-family="Roboto, sans-serif" font-size="13" fill="#E8EAED">• Derivação PBKDF2 com 100.000 iterações SHA-256</text>
+    <text x="850" y="244" font-family="Roboto, sans-serif" font-size="13" fill="#E8EAED">• Salt aleatório de 16 bytes + IV de 12 bytes</text>
+
+    <!-- Vault Password Modal -->
+    <rect x="530" y="400" width="520" height="360" rx="16" fill="#28292C" stroke="#5F6368" stroke-width="2"/>
+    <rect x="760" y="432" width="60" height="60" rx="16" fill="#F5A518"/>
+    <text x="778" y="472" font-family="Roboto, sans-serif" font-size="26" fill="#FFFFFF">🔒</text>
+    <text x="690" y="528" font-family="Inter, sans-serif" font-weight="700" font-size="20" fill="#FFFFFF">Cofre Criptografado</text>
+    <text x="580" y="558" font-family="Roboto, sans-serif" font-size="13" fill="#9AA0A6">Protegido por AES-GCM 256 bits. Insira sua senha mestre:</text>
+    <rect x="570" y="586" width="440" height="48" rx="8" fill="#202124" stroke="#F5A518" stroke-width="1.5"/>
+    <text x="594" y="616" font-family="Roboto, sans-serif" font-size="18" fill="#FFFFFF">••••••••••••</text>
+    <rect x="750" y="676" width="110" height="40" rx="8" fill="#383838"/>
+    <text x="776" y="701" font-family="Roboto, sans-serif" font-weight="600" font-size="14" fill="#E8EAED">Cancelar</text>
+    <rect x="876" y="676" width="134" height="40" rx="8" fill="#1A73E8"/>
+    <text x="902" y="701" font-family="Roboto, sans-serif" font-weight="600" font-size="14" fill="#FFFFFF">Desbloquear</text>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <g id="Frame_04_Quadro_Kanban_Agil">
+
+    <rect width="1440" height="900" rx="16" fill="#FAFAFA" stroke="#E0E0E0" stroke-width="2"/>
+    <rect width="1440" height="72" fill="#FFFFFF"/>
+    <line x1="0" y1="72" x2="1440" y2="72" stroke="#E0E0E0" stroke-width="1"/>
+    <text x="40" y="45" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#202124">Quadro Kanban Ágil — Fluxo Visual de Notas &amp; Checklists</text>
+    <rect x="40" y="104" width="420" height="740" rx="12" fill="#F1F3F4" stroke="#E0E0E0"/>
+    <circle cx="68" cy="136" r="6" fill="#F5A518"/>
+    <text x="84" y="141" font-family="Roboto, sans-serif" font-weight="700" font-size="16" fill="#202124">A Fazer / Ideias (2)</text>
+    <rect x="60" y="168" width="380" height="150" rx="8" fill="#FFF8B8" stroke="#E0E0E0"/>
+    <text x="80" y="202" font-family="Roboto, sans-serif" font-weight="700" font-size="15" fill="#202124">Primeiros passos</text>
+    <text x="80" y="230" font-family="Roboto, sans-serif" font-size="13" fill="#5F6368">Explorar comandos rápidos (/) e ditado por voz.</text>
+    <text x="350" y="295" font-family="Roboto, sans-serif" font-weight="700" font-size="12" fill="#1A73E8">Avançar →</text>
+    <rect x="510" y="104" width="420" height="740" rx="12" fill="#F1F3F4" stroke="#E0E0E0"/>
+    <circle cx="538" cy="136" r="6" fill="#1A73E8"/>
+    <text x="554" y="141" font-family="Roboto, sans-serif" font-weight="700" font-size="16" fill="#202124">Em Andamento (1)</text>
+    <rect x="530" y="168" width="380" height="170" rx="8" fill="#E2F6D3" stroke="#E0E0E0"/>
+    <text x="550" y="202" font-family="Roboto, sans-serif" font-weight="700" font-size="15" fill="#202124">Tarefas da Semana</text>
+    <text x="550" y="232" font-family="Roboto, sans-serif" font-size="13" fill="#202124">☐ Adicionar marcadores personalizados</text>
+    <text x="550" y="256" font-family="Roboto, sans-serif" font-size="13" fill="#202124">☐ Conversar com a IA (+2 concluídos)</text>
+    <text x="815" y="315" font-family="Roboto, sans-serif" font-weight="700" font-size="12" fill="#34A853">Concluir ✓</text>
+    <rect x="980" y="104" width="420" height="740" rx="12" fill="#F1F3F4" stroke="#E0E0E0"/>
+    <circle cx="1008" cy="136" r="6" fill="#34A853"/>
+    <text x="1024" y="141" font-family="Roboto, sans-serif" font-weight="700" font-size="16" fill="#202124">Concluído (1)</text>
+    <rect x="1000" y="168" width="380" height="150" rx="8" fill="#D3BFDB" stroke="#E0E0E0"/>
+    <text x="1020" y="202" font-family="Roboto, sans-serif" font-weight="700" font-size="15" fill="#202124">Setup Backend PHP &amp; SQLite</text>
+    <text x="1020" y="230" font-family="Roboto, sans-serif" font-size="13" fill="#5F6368">Banco data/keep.db e testes JSDOM validados.</text>
+  </g>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <g id="Frame_03_Assistente_IA">
+
+    <rect width="1440" height="900" rx="16" fill="#FFFFFF" stroke="#D2E3FC" stroke-width="2"/>
+    <rect width="1440" height="72" fill="#F8FAFD"/>
+    <line x1="0" y1="72" x2="1440" y2="72" stroke="#D2E3FC" stroke-width="1"/>
+    <text x="40" y="44" font-family="Inter, sans-serif" font-weight="700" font-size="22" fill="#1A73E8">✨ Assistente IA — AI Studio (gemini-3.6-flash)</text>
+    <rect x="1220" y="20" width="180" height="34" rx="17" fill="#FFFFFF" stroke="#E0E0E0"/>
+    <circle cx="1380" cy="37" r="5" fill="#1E8E3E"/>
+    <text x="1242" y="42" font-family="Roboto, sans-serif" font-weight="600" font-size="13" fill="#202124">Chave da API Ativa</text>
+    <rect x="0" y="73" width="340" height="827" fill="#FFFFFF" stroke="#E0E0E0"/>
+    <text x="24" y="112" font-family="Roboto, sans-serif" font-weight="700" font-size="15" fill="#202124">Notas em Contexto (2 selecionadas)</text>
+    <rect x="20" y="136" width="300" height="74" rx="8" fill="#E8F0FE" stroke="#1A73E8"/>
+    <text x="40" y="166" font-family="Roboto, sans-serif" font-weight="600" font-size="14" fill="#202124">☑ Primeiros passos</text>
+    <text x="40" y="190" font-family="Roboto, sans-serif" font-size="12" fill="#5F6368">Use o NoteKeep para organizar...</text>
+    <rect x="20" y="224" width="300" height="74" rx="8" fill="#E8F0FE" stroke="#1A73E8"/>
+    <text x="40" y="254" font-family="Roboto, sans-serif" font-weight="600" font-size="14" fill="#202124">☑ Tarefas da Semana</text>
+    <text x="40" y="278" font-family="Roboto, sans-serif" font-size="12" fill="#5F6368">4 itens de checklist (Trabalho)</text>
+    <rect x="380" y="96" width="140" height="32" rx="16" fill="#1A73E8"/>
+    <text x="402" y="117" font-family="Roboto, sans-serif" font-weight="600" font-size="12" fill="#FFFFFF">Resumir notas</text>
+    <rect x="532" y="96" width="140" height="32" rx="16" fill="#F1F3F4"/>
+    <text x="556" y="117" font-family="Roboto, sans-serif" font-weight="600" font-size="12" fill="#5F6368">Plano de ação</text>
+    <rect x="684" y="96" width="150" height="32" rx="16" fill="#F1F3F4"/>
+    <text x="708" y="117" font-family="Roboto, sans-serif" font-weight="600" font-size="12" fill="#5F6368">Conectar ideias</text>
+    <rect x="920" y="160" width="460" height="56" rx="12" fill="#1A73E8"/>
+    <text x="944" y="193" font-family="Roboto, sans-serif" font-size="14" fill="#FFFFFF">Faça um resumo executivo e plano de ação das notas.</text>
+    <rect x="380" y="244" width="680" height="210" rx="12" fill="#F1F3F4" stroke="#E0E0E0"/>
+    <text x="408" y="280" font-family="Roboto, sans-serif" font-weight="700" font-size="15" fill="#202124">Síntese Executiva &amp; Plano de Ação (Gemini 3.6 Flash):</text>
+    <text x="408" y="314" font-family="Roboto, sans-serif" font-size="14" fill="#202124">1. Concluído: Validação das 12 cores MD3 e tema escuro.</text>
+    <text x="408" y="344" font-family="Roboto, sans-serif" font-size="14" fill="#202124">2. Próximo Passo: Apresentar arquitetura híbrida PHP/SQLite + LocalStorage.</text>
+    <rect x="408" y="392" width="170" height="36" rx="8" fill="#1A73E8"/>
+    <text x="426" y="415" font-family="Roboto, sans-serif" font-weight="600" font-size="12" fill="#FFFFFF">+ Salvar como Nota</text>
+    <rect x="380" y="810" width="1020" height="54" rx="27" fill="#F1F3F4" stroke="#E0E0E0"/>
+    <text x="412" y="842" font-family="Roboto, sans-serif" font-size="14" fill="#80868B">Pergunte à IA sobre as notas selecionadas...</text>
+  </g>
+</svg>
