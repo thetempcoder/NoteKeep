@@ -22,6 +22,22 @@ Se PHP não for encontrado, o script inicia o modo local pelo iniciador Python e
 
 Execute apenas um servidor por vez: os dois scripts usam a porta 8000. Os modos local e SQLite têm dados separados; não há migração automática entre eles.
 
+## Executar no Linux
+
+Na primeira vez, garanta permissão de execução nos scripts pelo terminal:
+
+```bash
+chmod +x iniciar_php.sh iniciar_navegador.sh
+```
+
+### Armazenamento no navegador
+
+Execute `./iniciar_navegador.sh` e acesse `http://localhost:8000`. O script usa `python3` (ou `python`) e abre o navegador automaticamente se `xdg-open` estiver disponível.
+
+### PHP e SQLite
+
+Execute `./iniciar_php.sh` e acesse `http://localhost:8000`. É necessário PHP com a extensão `pdo_sqlite` habilitada (em distribuições Debian/Ubuntu, instale com `sudo apt install php-cli php-sqlite3`). Se o PHP não estiver instalado, o script alterna automaticamente para o modo local via `./iniciar_navegador.sh`.
+
 ## Recursos
 
 - Notas de texto, listas de tarefas, cores e notas fixadas.
@@ -44,8 +60,10 @@ O assistente requer uma chave do Google AI Studio, configurada na aba IA. A chav
 | `api/notes.php` | API de notas |
 | `api/labels.php` | API de marcadores |
 | `api/db.php` | Conexão e criação do banco |
-| `iniciar_php.bat` | Inicialização com PHP |
-| `iniciar_navegador.bat` | Inicialização com Python |
+| `iniciar_php.bat` | Inicialização com PHP (Windows) |
+| `iniciar_navegador.bat` | Inicialização com Python (Windows) |
+| `iniciar_php.sh` | Inicialização com PHP (Linux) |
+| `iniciar_navegador.sh` | Inicialização com Python (Linux) |
 
 ## Verificação
 
