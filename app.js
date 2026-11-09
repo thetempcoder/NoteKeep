@@ -545,11 +545,10 @@ class CommandPalette {
         id: 'toggle_theme',
         type: 'action',
         icon: 'dark_mode',
-        title: 'Alternar Tema Claro / Escuro',
+        title: 'Alternar Tema Claro / Escuro / Automático',
         desc: 'Muda a aparência de toda a aplicação',
         action: () => {
-          this.app.theme = this.app.theme === 'light' ? 'dark' : 'light';
-          this.app.applyTheme(this.app.theme);
+          this.app.cycleTheme();
         }
       },
       {
@@ -969,7 +968,7 @@ class NoteKeepApp {
     this.activeView = 'notes';
     this.searchQuery = '';
     this.viewMode = 'grid';
-    this.theme = localStorage.getItem('keep_theme') || 'light';
+    this.theme = localStorage.getItem('keep_theme') || 'auto'; // 'light' | 'dark' | 'auto'
     this.lastDeletedNote = null;
 
     // Estado do criador de nota
@@ -1162,11 +1161,16 @@ class NoteKeepApp {
 
     this.logoApp.addEventListener('click', () => this.switchView('notes'));
 
-    // Alternar tema
-    this.btnToggleTheme.addEventListener('click', () => {
-      this.theme = this.theme === 'light' ? 'dark' : 'light';
-      this.applyTheme(this.theme);
-    });
+    // Alternar tema (claro → escuro → automático)
+    this.btnToggleTheme.addEventListener('click', (e) => this.cycleTheme(e));
+
+    // Acompanhar o tema do sistema quando estiver no modo automático
+    if (window.matchMedia) {
+      const mq = window.matchMedia('(prefers-color-scheme: dark)');
+      const onSystemChange = () => { if (this.theme === 'auto') this.applyTheme('auto'); };
+      if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
+      else if (mq.addListener) mq.addListener(onSystemChange);
+    }
 
     // Alternar exibição lista / grade
     this.btnToggleView.addEventListener('click', () => {
@@ -1715,7 +1719,7 @@ class NoteKeepApp {
       this.modalLockIcon.style.color = '#f5a518';
       this.btnModalLockNote.title = 'Nota Criptografada (Clique para remover)';
       this.sound.playLock();
-      this.showToast('Nota protegida com criptografia militar AES-256!');
+      this.showToast('Nota protegida com AES-256! Ela agora fica só no Cofre Seguro.');
     }
   }
 
@@ -1847,11 +1851,60 @@ class NoteKeepApp {
     renderColumnCards(this.kanbanCardsDone, doneNotes, 'done');
   }
 
+  systemPrefersDark() {
+    return Boolean(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+
+  resolveTheme(theme = this.theme) {
+    if (theme === 'auto') return this.systemPrefersDark() ? 'dark' : 'light';
+    return theme === 'dark' ? 'dark' : 'light';
+  }
+
   applyTheme(theme) {
-    document.body.classList.toggle('theme-dark', theme === 'dark');
-    document.body.classList.toggle('theme-light', theme !== 'dark');
+    const resolved = this.resolveTheme(theme);
+    document.body.classList.toggle('theme-dark', resolved === 'dark');
+    document.body.classList.toggle('theme-light', resolved !== 'dark');
     localStorage.setItem('keep_theme', theme);
-    this.themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+    const icons = { light: 'light_mode', dark: 'dark_mode', auto: 'brightness_auto' };
+    const names = { light: 'Claro', dark: 'Escuro', auto: 'Automático (segue o sistema)' };
+    this.themeIcon.textContent = icons[theme] || 'dark_mode';
+    this.btnToggleTheme.title = `Tema: ${names[theme] || 'Claro'} — clique para alternar`;
+  }
+
+  // Ordem do ciclo: automático → oposto do sistema → igual ao sistema → automático.
+  // Assim todo clique que sai do automático muda visivelmente a aparência.
+  nextTheme() {
+    const system = this.systemPrefersDark() ? 'dark' : 'light';
+    const opposite = system === 'dark' ? 'light' : 'dark';
+    if (this.theme === 'auto') return opposite;
+    if (this.theme === opposite) return system;
+    return 'auto';
+  }
+
+  cycleTheme(event = null) {
+    const next = this.nextTheme();
+    const change = () => {
+      this.theme = next;
+      this.applyTheme(next);
+    };
+
+    // Transição circular a partir do botão (View Transitions API), com fallback.
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (document.startViewTransition && !reduceMotion && this.resolveTheme(next) !== this.resolveTheme(this.theme)) {
+      const rect = this.btnToggleTheme.getBoundingClientRect();
+      const x = event && event.clientX ? event.clientX : rect.left + rect.width / 2;
+      const y = event && event.clientY ? event.clientY : rect.top + rect.height / 2;
+      document.documentElement.style.setProperty('--theme-x', `${x}px`);
+      document.documentElement.style.setProperty('--theme-y', `${y}px`);
+      document.startViewTransition(change);
+    } else {
+      change();
+    }
+
+    if (this.snackbar) {
+      const names = { light: 'Tema claro', dark: 'Tema escuro', auto: 'Tema automático (segue o sistema)' };
+      this.showToast(names[next]);
+    }
   }
 
   updateViewModeUI() {
@@ -1922,7 +1975,8 @@ class NoteKeepApp {
 
     // Filtro da View ativa
     if (this.activeView === 'notes') {
-      filtered = filtered.filter(n => !n.is_trashed && !n.is_archived);
+      // Notas trancadas ficam apenas no Cofre Seguro
+      filtered = filtered.filter(n => !n.is_trashed && !n.is_archived && !n.is_locked);
     } else if (this.activeView === 'vault') {
       filtered = filtered.filter(n => !n.is_trashed && n.is_locked);
     } else if (this.activeView === 'reminders') {
@@ -1972,6 +2026,10 @@ class NoteKeepApp {
         this.emptyIcon.textContent = 'lock';
         this.emptyTitle.textContent = 'Nenhuma nota protegida no cofre';
         this.emptySubtitle.textContent = 'Abra qualquer nota e clique no cadeado para trancá-la com AES-256.';
+      } else if (this.activeView === 'reminders') {
+        this.emptyIcon.textContent = 'notifications';
+        this.emptyTitle.textContent = 'Nenhum lembrete agendado';
+        this.emptySubtitle.textContent = 'Abra uma nota, clique em ⋮ e escolha "Adicionar lembrete".';
       } else if (this.searchQuery) {
         this.emptyIcon.textContent = 'search_off';
         this.emptyTitle.textContent = 'Nenhum resultado encontrado';

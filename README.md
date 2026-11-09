@@ -42,9 +42,15 @@ Execute `./iniciar_php.sh` e acesse `http://localhost:8000`. É necessário PHP 
 
 - Notas de texto, listas de tarefas, cores e notas fixadas.
 - Pesquisa, marcadores, arquivo e lixeira.
-- Temas claro e escuro, visualizações em grade, lista e Kanban.
+- Temas claro, escuro e automático (segue o sistema), com transição animada; visualizações em grade, lista e Kanban.
+- Reordenação das notas arrastando e soltando, com ordem salva no navegador.
 - Paleta de comandos com Ctrl+K e atalhos no editor com `/`.
-- Imagens, entrada por voz e proteção de notas com senha.
+- Imagens, entrada por voz e proteção de notas com senha. Notas trancadas ficam só no Cofre Seguro, fora da tela inicial.
+- Lembretes com notificação do navegador (e aviso dentro do app quando as notificações estão bloqueadas).
+- Compartilhamento por link ou QR Code. O conteúdo vai compactado dentro do próprio link, sem servidor; o modo Texto gera um QR que o celular lê sem internet.
+- Exportação de uma nota em Markdown ou PDF (pela janela de impressão) e de todas as notas em Markdown pela paleta Ctrl+K.
+- Estudar com IA: resumo das notas escolhidas ou baralho de flashcards com cartões que viram.
+- Atalhos de teclado: aperte `?` para ver a lista.
 - Assistente de IA para conversar sobre notas selecionadas, extrair texto de imagens e salvar respostas como notas.
 
 O assistente requer uma chave do Google AI Studio, configurada na aba IA. A chave fica no LocalStorage do navegador. Ao usar esses recursos, o conteúdo necessário à solicitação é enviado à API do Google. Disponibilidade e cobrança dependem da conta e do serviço.
@@ -57,6 +63,8 @@ O assistente requer uma chave do Google AI Studio, configurada na aba IA. A chav
 | `styles.css` | Estilos e temas |
 | `app.js` | Notas, interações e persistência |
 | `ai.js` | Integração com o assistente |
+| `features.js` | Lembretes, compartilhamento, exportação, estudo com IA, arrastar e soltar, atalhos |
+| `features.css` | Estilos e animações desses recursos |
 | `api/notes.php` | API de notas |
 | `api/labels.php` | API de marcadores |
 | `api/db.php` | Conexão e criação do banco |
@@ -67,4 +75,6 @@ O assistente requer uma chave do Google AI Studio, configurada na aba IA. A chav
 
 ## Verificação
 
-Com Node.js instalado, execute `npm ci` e `npm test`. Os testes usam um DOM simulado, sem abrir navegador, e verificam inicialização, detecção do armazenamento e interações básicas.
+Com Node.js instalado, execute `npm ci` e `npm test`. Os testes usam um DOM simulado, sem abrir navegador, e verificam inicialização, detecção do armazenamento, interações básicas e os recursos de `features.js`.
+
+O gerador de QR Code é carregado sob demanda do cdnjs, então essa parte precisa de internet.
